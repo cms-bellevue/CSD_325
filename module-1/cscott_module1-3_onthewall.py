@@ -65,7 +65,7 @@ def get_user_input() -> int:
     while True:
         try:
             bottles = input("Enter number of bottles: ").strip()
-            print()  # Adds a blank line after user input
+            print()
             if not bottles.isdigit():
                 raise ValueError("Invalid input. Please enter a valid number.")
             bottles = int(bottles)
