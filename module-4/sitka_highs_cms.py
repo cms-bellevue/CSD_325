@@ -37,17 +37,17 @@ References:
 '''
 
 import csv
-import sys
+import sys  # Added to handle system exit on errors -cms
 from datetime import datetime
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
-# Constants
+# Constants (added for clarity and maintainability) -cms
 FILENAME = 'sitka_weather_2018_simple.csv'
 HIGH_INDEX = 5
 LOW_INDEX = 6
 DATE_INDEX = 2
 
-# Initialize data lists
+# Initialize data lists (added support for lows) -cms
 dates, highs, lows = [], [], []
 
 def read_weather_data(filename):
@@ -60,23 +60,23 @@ def read_weather_data(filename):
             reader = csv.reader(f)
             header_row = next(reader)
 
-            for row_num, row in enumerate(reader, start=2):
+            for row_num, row in enumerate(reader, start=2):  # Added row_num for better error reporting -cms
                 try:
                     current_date = datetime.strptime(row[DATE_INDEX], '%Y-%m-%d')
                     high = int(row[HIGH_INDEX])
-                    low = int(row[LOW_INDEX])
+                    low = int(row[LOW_INDEX])  # Added support for parsing low temps -cms
                 except (ValueError, IndexError) as e:
-                    print(f"[Warning] Skipping invalid row {row_num}: {e}")
+                    print(f"[Warning] Skipping invalid row {row_num}: {e}")  # Added detailed error handling -cms
                     continue
                 dates.append(current_date)
                 highs.append(high)
-                lows.append(low)
+                lows.append(low)  # Added storing low temps -cms
 
     except FileNotFoundError:
-        print(f"[Error] File not found: {filename}")
+        print(f"[Error] File not found: {filename}")  # Added error message for missing file -cms
         sys.exit(1)
     except Exception as e:
-        print(f"[Error] Unexpected error reading file: {e}")
+        print(f"[Error] Unexpected error reading file: {e}")  # Added general exception handling -cms
         sys.exit(1)
 
 def plot_temps(temp_type):
@@ -87,13 +87,13 @@ def plot_temps(temp_type):
     fig, ax = plt.subplots()
     try:
         if temp_type == 'high':
-            ax.plot(dates, highs, c='red')
+            ax.plot(dates, highs, c='red')  # Modified to use dynamic temp type -cms
             plt.title("Daily High Temperatures - 2018", fontsize=24)
         elif temp_type == 'low':
-            ax.plot(dates, lows, c='blue')
+            ax.plot(dates, lows, c='blue')  # Added option to plot lows -cms
             plt.title("Daily Low Temperatures - 2018", fontsize=24)
         elif temp_type == 'both':
-            ax.plot(dates, highs, c='red', label='Highs')
+            ax.plot(dates, highs, c='red', label='Highs')  # Added plotting both highs and lows -cms
             ax.plot(dates, lows, c='blue', label='Lows')
             plt.title("Daily High/Low Temperatures - 2018", fontsize=24)
             ax.legend()
@@ -105,12 +105,12 @@ def plot_temps(temp_type):
 
         plt.show()
     except KeyboardInterrupt:
-        print("\n[Notice] Plot window closed or interrupted.")
+        print("\n[Notice] Plot window closed or interrupted.")  # Added handling for plot window being closed -cms
     except Exception as e:
-        print(f"[Error] Failed to display plot: {e}")
+        print(f"[Error] Failed to display plot: {e}")  # Added general plot error handling -cms
 
 def display_menu():
-    """Displays the temperature selection menu."""
+    """Displays the temperature selection menu."""  # New menu system -cms
     print("\nWeather Data Viewer")
     print("Select an option:")
     print("  1 - View High Temperatures")
@@ -120,15 +120,16 @@ def display_menu():
 
 def main():
     """Main program loop."""
-    read_weather_data(FILENAME)
+    read_weather_data(FILENAME)  # Now uses function instead of inline file handling -cms
     while True:
-        display_menu()
+        display_menu()  # Interactive menu loop -cms
         try:
-            choice = input("Enter choice (1-4): ").strip()
+            choice = input("Enter choice (1-4): ").strip()  # Added safe input handling -cms
         except (EOFError, KeyboardInterrupt):
             print("\n[Info] Input interrupted. Exiting program.")
             sys.exit(0)
-
+        
+        # Dynamic plotting based on user choice -cms
         if choice == '1':
             plot_temps('high')
         elif choice == '2':
@@ -136,10 +137,10 @@ def main():
         elif choice == '3':
             plot_temps('both')
         elif choice == '4':
-            print("\nThanks for using the weather data viewer. Goodbye!")
+            print("\nThanks for using the weather data viewer. Goodbye!")  # Added user-friendly exit message -cms
             sys.exit(0)
         else:
-            print("[Warning] Invalid selection. Please choose 1, 2, 3, or 4.")
+            print("[Warning] Invalid selection. Please choose 1, 2, 3, or 4.")  # Input validation -cms
 
 if __name__ == '__main__':
-    main()
+    main()  # Switched from inline logic to main() function call -cms
