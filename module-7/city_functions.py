@@ -1,4 +1,9 @@
-# city_functions.py
+'''
+Clint Scott
+2025_0420
+CSD325 Advanced Python
+Module 7.2 Assignment – City Functions
+'''
 
 def format_city_country(city, country, population=None, language=None):
     """
